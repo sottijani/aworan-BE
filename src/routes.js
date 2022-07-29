@@ -33,12 +33,13 @@ const routes = (app) => {
 
 	// upload and download
 	app.post("/upload/", authenticate, upload.single("img"), uploadImage);
+	app.delete("/delete/image/:id", authenticate, deleteImage);
 	app.get("/uploads/", authenticate, getImages);
-	app.get("/uploads/:id", authenticate, getImages);
+	app.get("/upload/:id", authenticate, getImages);
 	app.post("/download", authenticate, downloadImage);
 
 	// admin
-	app.post("/approve/upload", authenticate, approveImage);
+	app.post("/approve/upload/:id", authenticate, approveImage);
 };
 
 export default routes;

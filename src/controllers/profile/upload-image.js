@@ -43,10 +43,29 @@ const uploadImage = async (req, res, next) => {
 
 export const getImages = async (req, res) => {
 	try {
-		let allImages = req.params.id ? await Upload.findAll({ where: { user_id: req.params.id } }) : await Upload.findAll();
+		let allImages = req.params.id
+			? await Upload.findAll({ where: { user_id: req.params.id } })
+			: await Upload.findAll();
 		return res.status(200).json({ "message": "All Images", "data": allImages });
 	} catch (error) {
 		console.log(error);
+		return res.status(500).json({ "message": error });
+	}
+};
+
+export const deleteImage = async (req, res) => {
+	try {
+		await Upload.update(
+			{ deletedAt: new Date().toTimeString() },
+			{
+				where: {
+					id: req.params.id,
+					deleted: null,
+				},
+			}
+		);
+		return res.status(200).json({ "message": "image approved" });
+	} catch (error) {
 		return res.status(500).json({ "message": error });
 	}
 };

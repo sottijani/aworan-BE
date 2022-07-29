@@ -10,7 +10,7 @@ const approveImage = async (req, res) => {
 			{
 				where: {
 					id: req.params.id,
-					deleted: null,
+					deletedAt: null,
 				},
 			}
 		);
