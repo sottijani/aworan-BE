@@ -10,7 +10,7 @@ const getUsers = async (req, res) => {
 			user && user !== "all"
 				? await User.findOne({
 						where: { deletedAt: null, id: user },
-						attributes: excludes,
+						attributes: helper.excludes,
 				  })
 				: await User.findAll({
 						where: { deletedAt: null },
@@ -28,6 +28,7 @@ const getUsers = async (req, res) => {
 			"params": req.params.id,
 		});
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
 			"message": error,
 		});

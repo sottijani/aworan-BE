@@ -1,7 +1,8 @@
 "use strict";
+
 // @ts-check
 
-import Upload from "../../models/Upload";
+import Upload from "../../models/Upload.js";
 
 const approveImage = async (req, res) => {
 	try {

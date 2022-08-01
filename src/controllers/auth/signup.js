@@ -12,10 +12,11 @@ const signUp = async (req, res) => {
 				"message": "invalid email",
 			});
 
-		const getUser = await User.findAll({
+		const getUser = await User.findOne({
 			where: { "email": req.body.email },
 		});
 
+		console.log(getUser);
 		if (getUser) {
 			return res.status(409).json({
 				"message": "User already exist",
@@ -40,6 +41,7 @@ const signUp = async (req, res) => {
 			"token": token,
 		});
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({
 			"message": error,
 		});

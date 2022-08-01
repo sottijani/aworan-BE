@@ -10,7 +10,7 @@ import verifyEmail from "./controllers/auth/verify-email.js";
 import getUsers from "./controllers/profile/user.js";
 import downloadImage from "./controllers/profile/download.js";
 import upateProfile from "./controllers/profile/update-profile.js";
-import uploadImage, { getImages, upload } from "./controllers/profile/upload-image.js";
+import uploadImage, { deleteImage, getImages, upload } from "./controllers/profile/upload-image.js";
 import { authenticate } from "./token.js";
 import approveImage from "./controllers/admin/approval.js";
 
