@@ -1,11 +1,24 @@
 "use strict";
 import multer from "multer";
 import Upload from "../../models/Upload.js";
+import fs from "fs";
+import path from "path";
+import cloudinary from "cloudinary";
+/**
+ * Cloudinary intilization
+ */
+const cloudinaryImage = cloudinary.v2;
+cloudinaryImage.config({
+	cloud_name: "dd1zbrj8l",
+	api_key: "547829252294477",
+	api_secret: "-NXo4BoXCoDbudvCe5aKMb5JI1U",
+	secure: true,
+});
 
 const multerStorage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, "./public/uploads");
-	},
+	// destination: (req, file, cb) => {
+	// 	cb(null, "./public/uploads");
+	// },
 	filename: (req, file, cb) => {
 		const ext = file.mimetype.split("/")[1];
 		const fileName = file.originalname.split(".")[0];
@@ -24,19 +37,26 @@ export const upload = multer({ storage: multerStorage, fileFilter: filter });
 
 const uploadImage = async (req, res, next) => {
 	try {
+		req.body.user_id = res.socket.parser.incoming.user.userId;
+		const options = {
+			use_filename: true,
+			unique_filename: false,
+			overwrite: true,
+			folder: "Aworan file",
+		};
 		const image = req.file && req.file;
-		const user_id = +req.body.user_id;
 		const path = image.path && image?.path.split("/");
+		const uploadRes = await cloudinaryImage.uploader.upload(image.path, options);
+		req.body.img_url = uploadRes.public_id;
+		// req.body.img_url = `${path[1]}/${path[2]}`;÷
 
 		if (path) {
-			await Upload.create({
-				img_url: `${path[1]}/${path[2]}`,
-				user_id: user_id,
-			});
+			await Upload.create(req.body);
 			return res.status(200).json({ "message": "Upload successful" });
 		}
 		return res.status(200).json({ "message": "Invalid image path" });
 	} catch (error) {
+		console.log(error);
 		return res.json({ "message": error });
 	}
 };

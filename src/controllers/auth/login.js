@@ -2,7 +2,6 @@
 // @ts-check
 
 import User from "../../models/User.js";
-import * as bcrypt from "bcrypt";
 import { accessToken } from "../../token.js";
 import helper from "../helpers.js";
 

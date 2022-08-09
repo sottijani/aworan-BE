@@ -4,7 +4,9 @@ import * as bcrypt from "bcrypt";
 import helper from "../helpers.js";
 
 const upateProfile = async (req, res) => {
+	console.log(req.body);
 	let body = req.body;
+	console.log(body);
 	try {
 		if (req.params.phrase && req.params.phrase !== "password") {
 			throw "Invalid url";
