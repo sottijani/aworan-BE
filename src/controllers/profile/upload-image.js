@@ -4,6 +4,9 @@ import Upload from "../../models/Upload.js";
 import fs from "fs";
 import path from "path";
 import cloudinary from "cloudinary";
+import User from "../../models/User.js";
+
+Upload.belongsTo(User, { foreignKey: "id" });
 /**
  * Cloudinary intilization
  */
@@ -63,9 +66,14 @@ const uploadImage = async (req, res, next) => {
 
 export const getImages = async (req, res) => {
 	try {
+		const userId = res.socket.parser.incoming?.user?.userId;
+		console.log(userId);
 		let allImages = req.params.id
-			? await Upload.findAll({ where: { user_id: req.params.id } })
-			: await Upload.findAll();
+			? await Upload.findAll({ where: { user_id: userId, deletedAt: null } })
+			: await Upload.findAll({
+					where: { deletedAt: null },
+			  });
+		console.log(allImages);
 		return res.status(200).json({ "message": "All Images", "data": allImages });
 	} catch (error) {
 		console.log(error);
@@ -76,16 +84,17 @@ export const getImages = async (req, res) => {
 export const deleteImage = async (req, res) => {
 	try {
 		await Upload.update(
-			{ deletedAt: new Date().toTimeString() },
+			{ deletedAt: new Date() },
 			{
 				where: {
 					id: req.params.id,
-					deleted: null,
+					deletedAt: null,
 				},
 			}
 		);
-		return res.status(200).json({ "message": "image approved" });
+		return res.status(200).json({ "message": "image Deleted" });
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({ "message": error });
 	}
 };

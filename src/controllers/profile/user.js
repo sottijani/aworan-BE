@@ -1,6 +1,9 @@
 "use strict";
+import Upload from "../../models/Upload.js";
 import User from "../../models/User.js";
 import helper from "../helpers.js";
+
+User.hasMany(Upload, { as: "uploads", foreignKey: "user_id" });
 
 const getUsers = async (req, res) => {
 	try {
@@ -11,6 +14,7 @@ const getUsers = async (req, res) => {
 				? await User.findOne({
 						where: { deletedAt: null, id: user },
 						attributes: helper.excludes,
+						include: { model: Upload, as: "uploads", foreignKey: "user_id" },
 				  })
 				: await User.findAll({
 						where: { deletedAt: null },
@@ -32,6 +36,19 @@ const getUsers = async (req, res) => {
 		return res.status(500).json({
 			"message": error,
 		});
+	}
+};
+
+export const analytics = async (req, res) => {
+	try {
+		const allUpload = await Upload.findAndCountAll({
+			where: { user_id: res.socket.parser.incoming.user.userId, deletedAt: null },
+		});
+		return res.status(200).json({
+			"total_upload": allUpload.count,
+		});
+	} catch (error) {
+		console.log(error);
 	}
 };
 

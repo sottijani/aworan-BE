@@ -7,7 +7,7 @@ import userType from "./controllers/auth/user-type.js";
 // @ts-check
 
 import verifyEmail from "./controllers/auth/verify-email.js";
-import getUsers from "./controllers/profile/user.js";
+import getUsers, { analytics } from "./controllers/profile/user.js";
 import downloadImage from "./controllers/profile/download.js";
 import upateProfile from "./controllers/profile/update-profile.js";
 import uploadImage, { deleteImage, getImages, upload } from "./controllers/profile/upload-image.js";
@@ -33,10 +33,13 @@ const routes = (app) => {
 
 	// upload and download
 	app.post("/upload/", authenticate, upload.single("img"), uploadImage);
-	app.delete("/delete/image/:id", authenticate, deleteImage);
-	app.get("/uploads/", authenticate, getImages);
+	app.put("/delete/image/:id", authenticate, deleteImage);
+	app.get("/uploads/", getImages);
 	app.get("/upload/:id", authenticate, getImages);
 	app.post("/download", authenticate, downloadImage);
+
+	// analytics
+	app.get("/analytics/", authenticate, analytics);
 
 	// admin
 	app.post("/approve/upload/:id", authenticate, approveImage);
