@@ -1,14 +1,13 @@
 "use strict";
 
 import fs from "fs";
-import client from "http";
+import client from "https";
 import path from "path";
 
 const download = (url) => {
 	const filename = path.basename(url);
 	return client.get(url, (res) => {
 		const fileStream = fs.createWriteStream(filename);
-
 		res.pipe(fileStream);
 		fileStream.on("error", (err) => {
 			console.log(err);
@@ -22,9 +21,7 @@ const download = (url) => {
 
 const downloadImage = (req, res) => {
 	try {
-		const resp = download(req.body.img_url);
-		resp.on("finish", (err) => res.status(200).json({ "message": "dowload completed" }));
-		resp.on("error", (err) => console.log(err));
+		res.download(req.query.img_url);
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({ "message": error });

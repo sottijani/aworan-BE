@@ -36,7 +36,7 @@ const routes = (app) => {
 	app.put("/delete/image/:id", authenticate, deleteImage);
 	app.get("/uploads/", getImages);
 	app.get("/upload/:id", authenticate, getImages);
-	app.post("/download", authenticate, downloadImage);
+	// app.get("/download", authenticate, downloadImage);
 
 	// analytics
 	app.get("/analytics/", authenticate, analytics);

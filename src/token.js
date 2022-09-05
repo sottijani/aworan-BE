@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
  * @returns {string}
  */
 export const accessToken = (user) => {
-	return jwt.sign(user, "token", { expiresIn: "1hr" });
+	return jwt.sign(user, "token");
 };
 
 export const authenticate = (req, res, next) => {
