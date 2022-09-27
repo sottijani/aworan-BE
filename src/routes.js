@@ -8,7 +8,7 @@ import userType from "./controllers/auth/user-type.js";
 
 import verifyEmail from "./controllers/auth/verify-email.js";
 import getUsers, { analytics } from "./controllers/profile/user.js";
-import downloadImage from "./controllers/profile/download.js";
+import downloadImage, { recordDownload } from "./controllers/profile/download.js";
 import upateProfile from "./controllers/profile/update-profile.js";
 import uploadImage, { deleteImage, getImages, upload } from "./controllers/profile/upload-image.js";
 import { authenticate } from "./token.js";
@@ -36,6 +36,7 @@ const routes = (app) => {
 	app.put("/delete/image/:id", authenticate, deleteImage);
 	app.get("/uploads/", getImages);
 	app.get("/upload/:id", authenticate, getImages);
+	app.put("/update/download", recordDownload);
 	// app.get("/download", authenticate, downloadImage);
 
 	// analytics
