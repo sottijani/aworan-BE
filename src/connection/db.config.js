@@ -1,16 +1,15 @@
 import Sequelize from "sequelize";
 const option = {
-	HOST: "localhost",
+	host: "sql8.freesqldatabase.com",
 	dialect: "mysql",
+	port: "3306",
 };
 
-const sequelize =  new Sequelize("photo-op", "root","root",  option)
+const sequelize = new Sequelize("sql8526824", "sql8526824", "MXKXvEa6L7", option);
 try {
-await sequelize.authenticate()
-	console.log("connection successful")
+	await sequelize.authenticate();
+	console.log("connection successful");
 } catch (error) {
-	console.log(error)
+	console.log(error);
 }
-export default sequelize
-
-
+export default sequelize;

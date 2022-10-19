@@ -1,11 +1,11 @@
+("use strict");
+// @ts-check
+
 import forgotPassword from "./controllers/auth/forget-password.js";
 import login from "./controllers/auth/login.js";
 import resetPassword from "./controllers/auth/reset-password.js";
 import signUp from "./controllers/auth/signup.js";
 import userType from "./controllers/auth/user-type.js";
-("use strict");
-// @ts-check
-
 import verifyEmail from "./controllers/auth/verify-email.js";
 import getUsers, { analytics } from "./controllers/profile/user.js";
 import downloadImage, { bookmarkImage, recordDownload } from "./controllers/profile/download.js";

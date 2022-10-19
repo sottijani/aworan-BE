@@ -59,7 +59,7 @@ const uploadImage = async (req, res, next) => {
 		}
 		return res.status(200).json({ "message": "Invalid image path" });
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 		return res.json({ "message": error });
 	}
 };
@@ -67,16 +67,16 @@ const uploadImage = async (req, res, next) => {
 export const getImages = async (req, res) => {
 	try {
 		const userId = res.socket.parser.incoming?.user?.userId;
-		console.log(userId);
+		// console.log(userId);
 		let allImages = req.params.id
 			? await Upload.findAll({ where: { user_id: userId, deletedAt: null } })
 			: await Upload.findAll({
 					where: { deletedAt: null },
 			  });
-		console.log(allImages);
+		// console.log(allImages);
 		return res.status(200).json({ "message": "All Images", "data": allImages });
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 		return res.status(500).json({ "message": error });
 	}
 };
@@ -94,7 +94,7 @@ export const deleteImage = async (req, res) => {
 		);
 		return res.status(200).json({ "message": "image Deleted" });
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 		return res.status(500).json({ "message": error });
 	}
 };

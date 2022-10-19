@@ -32,7 +32,7 @@ const getUsers = async (req, res) => {
 			"params": req.params.id,
 		});
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 		return res.status(500).json({
 			"message": error,
 		});
@@ -48,7 +48,7 @@ export const analytics = async (req, res) => {
 			"total_upload": allUpload.count,
 		});
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 	}
 };
 

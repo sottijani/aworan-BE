@@ -26,7 +26,7 @@ const upateProfile = async (req, res) => {
 			const saltRound = 10;
 
 			const password = await bcrypt.hash(body.password.toString(), saltRound);
-			console.log(password);
+			// console.log(password);
 			body["password"] = password;
 		} else {
 			body = helper.delete(body, "password").rest;
@@ -38,7 +38,7 @@ const upateProfile = async (req, res) => {
 			"message": "update successful",
 		});
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 		res.status(500).json({ "message": error });
 	}
 };

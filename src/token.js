@@ -12,14 +12,14 @@ export const accessToken = (user) => {
 export const authenticate = (req, res, next) => {
 	const auth = req.headers["authorization"];
 	const token = auth && auth.split(" ")[1];
-	console.log(token);
+	// console.log(token);
 	if (!token)
 		return res.status(401).json({
 			"message": "Unauthorized",
 		});
 	jwt.verify(token, "token", (err, user) => {
 		if (err) {
-			console.log(err);
+			// console.log(err);
 			return res.status(403).json({
 				"message": err.message,
 			});

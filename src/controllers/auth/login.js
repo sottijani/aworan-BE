@@ -27,7 +27,7 @@ const login = async (req, res) => {
 			"message": "incorrect email or password",
 		});
 	} catch (error) {
-		console.log(error);
+		// console.log(error);
 		return res.status(500).json({
 			"message": error,
 		});
