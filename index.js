@@ -10,6 +10,6 @@ app.use(express.static("public"));
 app.use(cors({ origin: "*" }));
 // database;
 sequelize.sync();
-// routes(app);
+routes(app);
 
 app.listen(PORT, () => console.log(`app is running on port ${PORT}`));
