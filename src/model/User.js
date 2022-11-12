@@ -14,8 +14,7 @@ User.init(
 		primary_role: { type: DataTypes.STRING },
 		sub_date: { type: DataTypes.DATE, allowNull: true },
 		sub_status: { type: DataTypes.BOOLEAN, defaultValue: false },
-		deletedAt: { type: DataTypes.STRING, allowNull: true },
 	},
-	{ sequelize, tableName: "users" }
+	{ sequelize, tableName: "users", paranoid: true }
 );
 export default User;

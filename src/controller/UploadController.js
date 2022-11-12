@@ -1,5 +1,10 @@
-import { uploadImage } from "../config/helper.js";
+import { selectImage, uploadImage } from "../config/helper.js";
+import Bookmark from "../model/Bookmark.js";
 import Upload from "../model/Upload.js";
+import User from "../model/User.js";
+
+Upload.hasMany(Bookmark, { foreignKey: "img_url" });
+Upload.belongsTo(User, { foreignKey: "creator_id", as: "creator" });
 
 const newUpload = async (req, res) => {
 	try {
@@ -28,16 +33,70 @@ const updateImage = async (req, res) => {
 	}
 };
 
-const removeImage = async (req, res) => {
+const getImages = async (req, res) => {
 	try {
-		Upload.destroy({ where: { id: req.params.id } });
+		const allImage = await Upload.findAll({
+			attributes: { exclude: "deletedAt" },
+			include: {
+				model: User,
+				as: "creator",
+				attributes: { exclude: ["deletedAt", "password", "sub_status"] },
+			},
+		});
 		return res.status(200).json({
-			"message": "image deleted successfuly",
+			data: allImage,
+			"message": "success",
 		});
 	} catch (error) {
 		console.log(error);
 	}
 };
 
-const uploads = { newUpload, updateImage, removeImage };
+const getImage = async (req, res) => {
+	try {
+		const image = await selectImage(req.params.id, {
+			include: {
+				model: User,
+				as: "creator",
+				attributes: { exclude: ["deletedAt", "password", "sub_status"] },
+			},
+		});
+		if (image !== null)
+			return res.status(200).json({
+				data: image,
+				"message": "success",
+			});
+		return res.status(404).json({ "message": "image not found" });
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const getCreatorImage = async (req, res) => {
+	try {
+		const allImage = await Upload.findAll({ where: { creator_id: req.params.id } }, { attributes: { exclude: "deletedAt" } });
+		if (!allImage.length)
+			return res.status(404).json({
+				data: allImage,
+				"message": "No uploads",
+			});
+		return res.status(200).json({
+			data: allImage,
+			"message": "success",
+		});
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const removeImage = async (req, res) => {
+	try {
+		await Upload.destroy({ where: { id: req.params.id } });
+		return res.status(200).json({ "message": "image deleted successfuly" });
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const uploads = { newUpload, updateImage, removeImage, getImages, getImage, getCreatorImage };
 export default uploads;

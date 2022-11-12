@@ -1,4 +1,3 @@
-import { Op } from "sequelize";
 import Wallet from "../model/Wallet";
 
 const fetchWallet = async (id) => {

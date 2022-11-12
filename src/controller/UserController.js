@@ -1,6 +1,8 @@
 import { decryptPassword, harshPassword, uploadImage, validator } from "../config/helper.js";
+import Upload from "../model/Upload.js";
 import User from "../model/User.js";
 
+User.hasMany(Upload, { foreignKey: "creator_id" });
 const signUp = async (req, res) => {
 	const body = req.body;
 	body.password = await harshPassword(req.body.password);

@@ -6,7 +6,6 @@ Role.init(
 	{
 		id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
 		role_title: { type: DataTypes.STRING },
-		deletedAt: { type: DataTypes.STRING, allowNull: true },
 	},
 	{ sequelize, modelName: "Role" }
 );

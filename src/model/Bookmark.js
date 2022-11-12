@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
-import connect from "../config/db.config";
+import sequelize from "../config/db.config.js";
+import Upload from "./Upload.js";
 
 class Bookmark extends Model {}
 Bookmark.init(
@@ -8,9 +9,8 @@ Bookmark.init(
 		user_id: DataTypes.STRING,
 		creator_id: DataTypes.STRING,
 		img_url: DataTypes.STRING,
-		phone: { type: DataTypes.STRING, allowNull: true },
-		deletedAt: DataTypes.DATE,
 	},
-	{ connect, modelName: "Bookmark" }
+	{ sequelize, modelName: "Bookmark", paranoid: true }
 );
+
 export default Bookmark;
