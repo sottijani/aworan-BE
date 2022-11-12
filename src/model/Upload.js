@@ -1,17 +1,20 @@
 import { Model, DataTypes } from "sequelize";
-import connect from "../config/db.config";
+import sequelize from "../config/db.config.js";
 
 class Upload extends Model {}
 Upload.init(
 	{
-		id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-		img_url: Sequelize.STRING,
-		creator_id: Sequelize.STRING,
-		total_downloads: Sequelize.STRING,
-		total_bookmark: Sequelize.STRING,
-		total_view: Sequelize.STRING,
-		deletedAt: { allowNull: true, type: Sequelize.DATE },
+		id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+		img_url: DataTypes.STRING,
+		creator_id: DataTypes.STRING,
+		total_downloads: DataTypes.STRING,
+		total_bookmark: DataTypes.STRING,
+		tags: DataTypes.STRING,
+		title: DataTypes.STRING,
+		category: DataTypes.STRING,
+		total_view: DataTypes.STRING,
+		deletedAt: { allowNull: true, type: DataTypes.DATE },
 	},
-	{ connect, modelName: "Upload" }
+	{ sequelize, modelName: "Upload" }
 );
 export default Upload;

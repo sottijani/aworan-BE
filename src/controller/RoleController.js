@@ -21,7 +21,7 @@ const updateRole = async (req, res) => {
 	}
 };
 
-const getRoles = async (req, res) => {
+const getRoles = async (_req, res) => {
 	try {
 		const response = await Role.findAll({ attributes: { exclude: "deletedAt" } });
 		return res.status(200).json({ data: response, message: "success" });

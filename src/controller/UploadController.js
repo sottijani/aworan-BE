@@ -1,7 +1,7 @@
-import { off } from "npm";
-import Upload from "../model/Upload";
+import { uploadImage } from "../config/helper.js";
+import Upload from "../model/Upload.js";
 
-const uploadImage = async (req, res) => {
+const newUpload = async (req, res) => {
 	try {
 		const imgUrl = await uploadImage(req);
 		req.body.img_url = imgUrl;
@@ -39,5 +39,5 @@ const removeImage = async (req, res) => {
 	}
 };
 
-const uploads = { uploadImage, updateImage, removeImage };
+const uploads = { newUpload, updateImage, removeImage };
 export default uploads;
