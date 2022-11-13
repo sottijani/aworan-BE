@@ -19,15 +19,31 @@ const downloadImage = async (req, res) => {
 };
 
 const getCreatorDownloadCount = async (req, res) => {
-	const { count, rows } = await Download.findAndCountAll({ where: { creator_id: req.params.user_id } });
+	const token = decodeToken(req);
+	const { count, rows } = await Download.findAndCountAll({ where: { creator_id: token.user_id } });
 	return res.status(200).json({ count, data: rows, "message": "success" });
 };
 
 const getImageDownloadCount = async (req, res) => {
-	const { count, rows } = await Download.findAndCountAll({ where: { img_id: req.params.id } });
-	return res.status(200).json({ count, data: rows, "message": "success" });
+	try {
+		const { count, rows } = await Download.findAndCountAll({ where: { img_id: req.params.id } });
+		return res.status(200).json({ count, data: rows, "message": "success" });
+	} catch (error) {
+		console.log(error);
+	}
 };
 
-const downloads = { getImageDownloadCount, getCreatorDownloadCount, downloadImage };
+const analytics = async (req, res) => {
+	const token = decodeToken(req);
+	try {
+		const downloads = await Download.count({ where: { creator_id: token.user_id } });
+		const photos = await Upload.count({ where: { creator_id: token.user_id } });
+		return res.status(200).json({ downloads, photos, "message": "success" });
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const downloads = { getImageDownloadCount, getCreatorDownloadCount, downloadImage, analytics };
 // export default downloadImage;
 export default downloads;
