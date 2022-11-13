@@ -1,4 +1,4 @@
-import { selectImage, uploadImage } from "../config/helper.js";
+import { decodeToken, selectImage, uploadImage } from "../config/helper.js";
 import Bookmark from "../model/Bookmark.js";
 import Upload from "../model/Upload.js";
 import User from "../model/User.js";
@@ -7,6 +7,14 @@ Upload.hasMany(Bookmark, { foreignKey: "img_url" });
 Upload.belongsTo(User, { foreignKey: "creator_id", as: "creator" });
 
 const newUpload = async (req, res) => {
+	const token = decodeToken(req);
+	req.body.creator_id = token.user_id;
+
+	if (token.user_role === null)
+		return res.status(403).json({
+			"message": "Ineligible",
+		});
+
 	try {
 		const imgUrl = await uploadImage(req);
 		req.body.img_url = imgUrl;
@@ -73,8 +81,9 @@ const getImage = async (req, res) => {
 };
 
 const getCreatorImage = async (req, res) => {
+	const token = decodeToken(req);
 	try {
-		const allImage = await Upload.findAll({ where: { creator_id: req.params.id } }, { attributes: { exclude: "deletedAt" } });
+		const allImage = await Upload.findAll({ where: { creator_id: token.user_id } }, { attributes: { exclude: "deletedAt" } });
 		if (!allImage.length)
 			return res.status(404).json({
 				data: allImage,

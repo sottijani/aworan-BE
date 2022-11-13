@@ -1,4 +1,4 @@
-import { decryptPassword, harshPassword, uploadImage, validator } from "../config/helper.js";
+import { decodeToken, decryptPassword, harshPassword, uploadImage, validator } from "../config/helper.js";
 import token from "../config/token.js";
 import Upload from "../model/Upload.js";
 import User from "../model/User.js";
@@ -61,8 +61,9 @@ const getUsers = async (req, res) => {
 };
 
 const profile = async (req, res) => {
+	const token = decodeToken(req);
 	try {
-		const id = req.params.id;
+		const id = req.params.id ? req.params.id : token.user_id;
 		const response = await User.findByPk(id, {
 			attributes: { exclude: ["deletedAt", "password"] },
 		});
@@ -73,19 +74,19 @@ const profile = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
+	const token = decodeToken(req);
 	try {
-		const id = req.params.id;
 		const { password, img_url, ...body } = req.body;
-		await User.update(body, { where: { id: id } });
+		await User.update(body, { where: { id: token.user_id } });
 		return res.status(200).json({ "message": "Profile update successful" });
 	} catch (error) {}
 };
 
 const changePassword = async (req, res) => {
 	try {
-		const id = req.params.id;
+		const token = decodeToken(req);
 		let password = await harshPassword(req.body.password);
-		await User.update({ password: password }, { where: { id: id } });
+		await User.update({ password: password }, { where: { id: token.user_id } });
 		return res.status(200).json({ "message": "password change successful" });
 	} catch (error) {}
 	console.log(error);
@@ -103,10 +104,10 @@ const forgotPassword = async (req, res) => {
 };
 
 const changeProfilepic = async (req, res) => {
+	const token = decodeToken(req);
 	try {
 		const imgUrl = await uploadImage(req);
-		const id = req.body.id;
-		const response = User.update({ img_url: imgUrl }, { where: { id: id } });
+		await User.update({ img_url: imgUrl }, { where: { id: token.user_id } });
 
 		return res.status(200).json({ "message": "image upload successful" });
 	} catch (error) {

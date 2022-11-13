@@ -1,4 +1,4 @@
-import { selectImage } from "../config/helper.js";
+import { decodeToken, selectImage } from "../config/helper.js";
 import Bookmark from "../model/Bookmark.js";
 import Upload from "../model/Upload.js";
 
@@ -10,19 +10,20 @@ const getBookmarkById = async (id) => {
 };
 
 const addBookmark = async (req, res) => {
+	const token = decodeToken(req);
 	try {
-		const img = await selectImage(req.params.id);
-		if (img === null) return res.status(404).json({ "message": "not found" });
-		const total_bookmark = parseInt(img.total_bookmark) + 1;
+		// const img = await selectImage(req.params.id);
+		// if (img === null) return res.status(404).json({ "message": "not found" });
 
-		const body = {
-			creator_id: img.creator_id,
-			img_url: img.id,
-			user_id: req.body.user_id,
-		};
+		// const body = {
+		// 	creator_id: img.creator_id,
+		// 	img_url: img.id,
+		// 	user_id: token.user_id,
+		// };
+		req.body.user_id = token.user_id;
+		await Bookmark.create(req.body);
+		await Upload.increment({ total_bookmark: 1 }, { where: { id: req.body.img_id } });
 
-		await Bookmark.create(body);
-		await Upload.update({ total_bookmark }, { where: { id: img.id } });
 		return res.status(200).json({ "message": "success" });
 	} catch (error) {
 		console.log(error);
@@ -37,9 +38,8 @@ const removeBookmark = async (req, res) => {
 		const img = await selectImage(getBookmark.img_url);
 		if (img === null) return res.status(404).json({ "message": "not found" });
 
-		const total_bookmark = parseInt(img.total_bookmark) - 1;
 		await Bookmark.destroy({ where: { id: req.params.id } });
-		await Upload.update({ total_bookmark }, { where: { id: img.id } });
+		await Upload.decrement({ total_bookmark: 1 }, { where: { id: img.id } });
 		return res.status(200).json({ "message": "success" });
 	} catch (error) {
 		console.log(error);
