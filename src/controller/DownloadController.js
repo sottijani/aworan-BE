@@ -16,4 +16,16 @@ const downloadImage = async (req, res) => {
 	}
 };
 
-export default downloadImage;
+const getCreatorDownloadCount = async (req, res) => {
+	const { count, rows } = await Download.findAndCountAll({ where: { creator_id: req.params.user_id } });
+	return res.status(200).json({ count, data: rows, "message": "successful" });
+};
+
+const getImageDownloadCount = async (req, res) => {
+	const { count, rows } = await Download.findAndCountAll({ where: { img_id: req.params.id } });
+	return res.status(200).json({ count, data: rows, "message": "successful" });
+};
+
+const downloads = { getImageDownloadCount, getCreatorDownloadCount, downloadImage };
+// export default downloadImage;
+export default downloads;

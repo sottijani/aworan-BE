@@ -9,7 +9,7 @@ Download.init(
 		img_url: { type: DataTypes.STRING },
 		creator_id: { type: DataTypes.STRING },
 		user_id: { type: DataTypes.STRING },
-		phone: { type: DataTypes.STRING, allowNull: true },
+		// phone: { type: DataTypes.STRING, allowNull: true },
 	},
 	{ sequelize, modelName: "Download" }
 );

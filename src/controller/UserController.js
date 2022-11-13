@@ -1,4 +1,5 @@
 import { decryptPassword, harshPassword, uploadImage, validator } from "../config/helper.js";
+import token from "../config/token.js";
 import Upload from "../model/Upload.js";
 import User from "../model/User.js";
 
@@ -35,15 +36,18 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
 	const body = req.body;
 	try {
-		const checkEmail = await User.findOne({ where: { email: body.email } });
-		if (checkEmail === null)
+		const user = await User.findOne({ where: { email: body.email }, attributes: { exclude: "deletedAt" } });
+		if (user === null)
 			return res.status(404).json({
 				"message": "No email in our database",
 			});
-		const match = await decryptPassword(body.password, checkEmail.password);
+		const match = await decryptPassword(body.password, user.password);
 		if (match)
 			return res.status(200).json({
-				"token": checkEmail,
+				"token": token.accessToken({
+					user_id: user.id,
+					user_role: user.primary_role,
+				}),
 				"message": "login successful",
 			});
 	} catch (error) {
