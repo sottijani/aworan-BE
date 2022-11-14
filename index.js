@@ -9,4 +9,5 @@ app.use(cors({ origin: "*" }));
 
 connect.sync();
 routes(app);
+
 app.listen(PORT, () => console.log("app is listening to port " + PORT));
