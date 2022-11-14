@@ -1,9 +1,11 @@
 import { decodeToken, decryptPassword, harshPassword, uploadImage, validator } from "../config/helper.js";
 import token from "../config/token.js";
+import Role from "../model/Role.js";
 import Upload from "../model/Upload.js";
 import User from "../model/User.js";
 
 User.hasMany(Upload, { foreignKey: "creator_id" });
+User.belongsTo(Role, { foreignKey: "primary_role", as: "role" });
 const signUp = async (req, res) => {
 	const body = req.body;
 	body.password = await harshPassword(req.body.password);
@@ -36,7 +38,15 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
 	const body = req.body;
 	try {
-		const user = await User.findOne({ where: { email: body.email }, attributes: { exclude: "deletedAt" } });
+		const user = await User.findOne({
+			where: { email: body.email },
+			attributes: { exclude: "deletedAt" },
+			include: {
+				model: Role,
+				as: "role",
+				attributes: { exclude: ["createdAt", "updatedAt"] },
+			},
+		});
 		if (user === null)
 			return res.status(404).json({
 				"message": "No email in our database",
@@ -46,9 +56,11 @@ const signIn = async (req, res) => {
 			return res.status(200).json({
 				"token": token.accessToken({
 					user_id: user.id,
+					role: user.role.role_title,
 					user_role: user.primary_role,
 				}),
 				"message": "login successful",
+				"role": user.role.role_title,
 			});
 	} catch (error) {
 		console.log(error);
@@ -56,7 +68,14 @@ const signIn = async (req, res) => {
 };
 
 const getUsers = async (req, res) => {
-	const response = await User.findAll({ attributes: { exclude: ["password", "deletedAt"] } });
+	const response = await User.findAll({
+		attributes: { exclude: ["password", "deletedAt"] },
+		include: {
+			model: Role,
+			as: "role",
+			attributes: { exclude: ["createdAt", "updatedAt"] },
+		},
+	});
 	return res.status(200).json({ "data": response, "message": " retrived" });
 };
 
@@ -88,8 +107,9 @@ const changePassword = async (req, res) => {
 		let password = await harshPassword(req.body.password);
 		await User.update({ password: password }, { where: { id: token.user_id } });
 		return res.status(200).json({ "message": "password change successful" });
-	} catch (error) {}
-	console.log(error);
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 const resetPassword = async (req, res) => {

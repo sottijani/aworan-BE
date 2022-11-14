@@ -1,5 +1,6 @@
 import { decodeToken, selectImage, uploadImage } from "../config/helper.js";
 import Bookmark from "../model/Bookmark.js";
+import Role from "../model/Role.js";
 import Upload from "../model/Upload.js";
 import User from "../model/User.js";
 
@@ -10,17 +11,19 @@ const newUpload = async (req, res) => {
 	const token = decodeToken(req);
 	req.body.creator_id = token.user_id;
 
-	if (token.user_role === null)
-		return res.status(403).json({
-			"message": "Ineligible",
-		});
-
 	try {
+		const role = await Role.findByPk(token.user_role);
+		if (role.role_title !== "creator")
+			return res.status(403).json({
+				"message": "denied",
+				"type": token.user_role,
+			});
 		const imgUrl = await uploadImage(req);
 		req.body.img_url = imgUrl;
 		const upload = await Upload.create(req.body);
 		return res.status(200).json({
 			"id": upload.id,
+			"url": imgUrl,
 			"message": "image upload successful",
 		});
 	} catch (error) {
