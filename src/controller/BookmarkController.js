@@ -12,14 +12,6 @@ const getBookmarkById = async (id) => {
 const addBookmark = async (req, res) => {
 	const token = decodeToken(req);
 	try {
-		// const img = await selectImage(req.params.id);
-		// if (img === null) return res.status(404).json({ "message": "not found" });
-
-		// const body = {
-		// 	creator_id: img.creator_id,
-		// 	img_url: img.id,
-		// 	user_id: token.user_id,
-		// };
 		req.body.user_id = token.user_id;
 		await Bookmark.create(req.body);
 		await Upload.increment({ total_bookmark: 1 }, { where: { id: req.body.img_id } });

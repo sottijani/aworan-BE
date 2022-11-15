@@ -12,6 +12,7 @@ Upload.init(
 		total_bookmark: { type: DataTypes.STRING, defaultValue: 0 },
 		tags: DataTypes.STRING,
 		title: DataTypes.STRING,
+		status: DataTypes.STRING,
 		category: DataTypes.STRING,
 		total_view: DataTypes.STRING,
 	},

@@ -44,6 +44,26 @@ const updateImage = async (req, res) => {
 	}
 };
 
+const approvedImages = async (req, res) => {
+	try {
+		const allImage = await Upload.findAll({
+			where: { status: "approved" },
+			attributes: { exclude: "deletedAt" },
+			include: {
+				model: User,
+				as: "creator",
+				attributes: { exclude: ["deletedAt"] },
+			},
+		});
+		return res.status(200).json({
+			data: allImage,
+			"message": "success",
+		});
+	} catch (error) {
+		console.log(error);
+	}
+};
+
 const getImages = async (req, res) => {
 	try {
 		const allImage = await Upload.findAll({
@@ -110,5 +130,5 @@ const removeImage = async (req, res) => {
 	}
 };
 
-const uploads = { newUpload, updateImage, removeImage, getImages, getImage, getCreatorImage };
+const uploads = { newUpload, updateImage, removeImage, getImages, getImage, getCreatorImage, approvedImages };
 export default uploads;

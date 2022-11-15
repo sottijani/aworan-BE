@@ -6,7 +6,7 @@ const downloadImage = async (req, res) => {
 		const token = decodeToken(req);
 		req.body.user_id = token.user_id;
 		await Download.create(req.body);
-		await Upload.increment({ total_download: 1 }, { where: { id: req.body.img_id } });
+		await Upload.increment({ total_downloads: 1 }, { where: { id: req.body.img_id } });
 		return res.status(200).json({ "message": "success" });
 		/*
 			Pending Task
