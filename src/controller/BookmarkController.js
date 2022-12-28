@@ -2,7 +2,7 @@ import { decodeToken, selectImage } from "../config/helper.js"
 import Bookmark from "../model/Bookmark.js"
 import Upload from "../model/Upload.js"
 
-// Bookmark.belongsTo(Upload, { as: "upload", foreignKey: "id" });
+Bookmark.belongsTo(Upload, { as: "upload", foreignKey: "id" })
 
 const getBookmarkById = async (id) => {
   const img = await Bookmark.findByPk(id, { attributes: { exclude: "deletedAt" } })

@@ -10,8 +10,8 @@ import Role from "../model/Role.js"
 import Upload from "../model/Upload.js"
 import User from "../model/User.js"
 
-// User.hasMany(Upload, { foreignKey: "creator_id" });
-// User.belongsTo(Role, { foreignKey: "primary_role", as: "role" });
+User.hasMany(Upload, { foreignKey: "creator_id" })
+User.belongsTo(Role, { foreignKey: "primary_role", as: "role" })
 const signUp = async (req, res) => {
   const body = req.body
   body.password = await harshPassword(req.body.password)

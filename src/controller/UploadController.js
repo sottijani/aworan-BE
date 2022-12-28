@@ -4,8 +4,8 @@ import Role from "../model/Role.js"
 import Upload from "../model/Upload.js"
 import User from "../model/User.js"
 
-// Upload.hasMany(Bookmark, { foreignKey: "img_url" });
-// Upload.belongsTo(User, { foreignKey: "creator_id", as: "creator" });
+Upload.hasMany(Bookmark, { foreignKey: "img_url" })
+Upload.belongsTo(User, { foreignKey: "creator_id", as: "creator" })
 
 const newUpload = async (req, res) => {
   const token = decodeToken(req)
