@@ -1,18 +1,22 @@
-import Sequelize from "sequelize";
+import Sequelize from "sequelize"
 
 const option = {
-	host: "localhost",
-	dialect: "mysql",
-	port: 8889,
-};
-
-const sequelize = new Sequelize("aworan", "root", "root", option);
-
-try {
-	await sequelize.authenticate();
-	console.log("connected");
-} catch (error) {
-	console.log(error);
+  host: "afrilens.com.ng",
+  dialect: "mysql",
+  port: 3306
 }
 
-export default sequelize;
+// const sequelize = new Sequelize("afrilens_beta", "afrilens_victor", "Bullyvax2022", option)
+
+const sequelize = new Sequelize("afrilens_beta", "afrilens_victor", "Bullyvax2022", option)
+try {
+  await sequelize.authenticate()
+  console.log("connected")
+} catch (error) {
+  console.log(error)
+}
+
+export default sequelize
+
+// username: afrilens_victor
+// password: Bullyvax2022
